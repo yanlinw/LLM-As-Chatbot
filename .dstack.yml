@@ -1,0 +1,7 @@
+type: task
+build: 
+ - pip install -r requirements.txt
+ports:
+ - 6006
+commands:
+ - python app.py
