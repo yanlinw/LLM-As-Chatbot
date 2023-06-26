@@ -67,7 +67,11 @@ def initialize_globals(args):
     global gen_config_summarization
     
     model_type_tmp = "alpaca"
-    if "wizardcoder" in args.base_url.lower():
+    if "orca_mini" in args.base_url.lower():
+        model_type_tmp = "orcamini"
+    elif "open-llama" in args.base_url.lower():
+        model_type_tmp = "openllama"
+    elif "wizardcoder" in args.base_url.lower():
         model_type_tmp = "wizard-coder"
     elif "wizard-vicuna" in args.base_url.lower():
         model_type_tmp = "wizard-vicuna"
@@ -191,7 +195,9 @@ def get_load_model(model_type):
         model_type == "nous-hermes" or \
         model_type == "lazarus" or \
         model_type == "chronos" or \
-        model_type == "wizardlm":
+        model_type == "wizardlm" or \
+        model_type == "openllama" or \
+        model_type == "orcamini":
         return alpaca.load_model
     elif model_type == "stablelm" or model_type == "os-stablelm":
         return stablelm.load_model
