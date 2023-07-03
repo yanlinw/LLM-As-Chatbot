@@ -163,8 +163,7 @@ def byom_load(
     base, ckpt, model_cls, tokenizer_cls,
     bos_token_id, eos_token_id, pad_token_id, 
     load_mode,
-):
-    
+):  
     # mode_cpu, model_mps, mode_8bit, mode_4bit, mode_full_gpu
     global_vars.initialize_globals_byom(
         base, ckpt, model_cls, tokenizer_cls,
@@ -173,7 +172,7 @@ def byom_load(
         True if load_mode == "apple silicon" else False,
         True if load_mode == "8bit" else False,
         True if load_mode == "4bit" else False,
-        True if load_mode == "gpu(half)" else False
+        True if load_mode == "gpu(half)" else False,
     )
     
     return (
@@ -271,6 +270,8 @@ def download_completed(
     thumbnail_tiny,
     force_download,
 ):
+    global local_files_only
+    
     tmp_args = types.SimpleNamespace()
     tmp_args.base_url = model_base.split(":")[-1].split("</p")[0].strip()
     tmp_args.ft_ckpt_url = model_ckpt.split(":")[-1].split("</p")[0].strip()
@@ -284,6 +285,7 @@ def download_completed(
     tmp_args.mode_8bit = True if load_mode == "gpu(load_in_8bit)" else False
     tmp_args.mode_4bit = True if load_mode == "gpu(load_in_4bit)" else False
     tmp_args.mode_full_gpu = True if load_mode == "gpu(half)" else False
+    tmp_args.local_files_only = local_files_only
     
     try:
         global_vars.initialize_globals(tmp_args)
@@ -366,6 +368,9 @@ def rollback_last(idx, ld, state):
     )
 
 def main(args):
+    global local_files_only
+    local_files_only = args.local_files_only
+    
     with gr.Blocks(css=MODEL_SELECTION_CSS, theme='gradio/soft') as demo:
         with gr.Column(visible=True, elem_id="landing-container") as landing_view:
             gr.Markdown("# Chat with LLM", elem_classes=["center"])
@@ -492,6 +497,10 @@ def main(args):
                         with gr.Column(min_width=20):
                             orcamini_7b = gr.Button("orcamini-7b", elem_id="orcamini-7b", elem_classes=["square"])
                             gr.Markdown("Orca Mini", elem_classes=["center"])
+
+                        with gr.Column(min_width=20):
+                            xgen_7b = gr.Button("xgen-7b", elem_id="xgen-7b", elem_classes=["square"])
+                            gr.Markdown("XGen", elem_classes=["center"])
 
                     gr.Markdown("## ~ 20B Parameters")
                     with gr.Row(elem_classes=["sub-container"]):
@@ -861,6 +870,7 @@ def main(args):
                 gpt4_alpaca_7b, os_stablelm7b, mpt_7b, redpajama_7b, redpajama_instruct_7b, llama_deus_7b, 
                 evolinstruct_vicuna_7b, alpacoom_7b, baize_7b, guanaco_7b, vicuna_7b_1_3,
                 falcon_7b, wizard_falcon_7b, airoboros_7b, samantha_7b, openllama_7b, orcamini_7b,
+                xgen_7b,
                 flan11b, koalpaca, kullm, alpaca_lora13b, gpt4_alpaca_13b, stable_vicuna_13b,
                 starchat_15b, starchat_beta_15b, vicuna_7b, vicuna_13b, evolinstruct_vicuna_13b, 
                 baize_13b, guanaco_13b, nous_hermes_13b, airoboros_13b, samantha_13b, chronos_13b,
@@ -1055,6 +1065,7 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--root-path', default="")
+    parser.add_argument('--local-files-only', default=False, action=argparse.BooleanOptionalAction)
     parser.add_argument('--share', default=False, action=argparse.BooleanOptionalAction)
     parser.add_argument('--debug', default=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()

@@ -1,6 +1,5 @@
 import torch
-from peft import PeftModel
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from optimum.bettertransformer import BetterTransformer
 
 def load_model(
@@ -15,48 +14,44 @@ def load_model(
     local_files_only
 ):
     tokenizer = AutoTokenizer.from_pretrained(
-        base, local_files_only=local_files_only
+        base, trust_remote_code=True, local_files_only=local_files_only
     )
-    tokenizer.padding_side = "left"
-
+    
     if mode_cpu:
         print("cpu mode")
         model = AutoModelForCausalLM.from_pretrained(
             base, 
-            device_map={"": "cpu"},
-            torch_dtype=torch.bfloat16,
+            device_map={"": "cpu"}, 
             use_safetensors=False,
             trust_remote_code=True,
             local_files_only=local_files_only
         )
-            
     elif mode_mps:
         print("mps mode")
         model = AutoModelForCausalLM.from_pretrained(
             base,
             device_map={"": "mps"},
-            torch_dtype=torch.bfloat16,
+            torch_dtype=torch.float16,
             use_safetensors=False,
             trust_remote_code=True,
             local_files_only=local_files_only
         )
-            
     else:
         print("gpu mode")
-        print(f"8bit = {mode_8bit}, 4bit = {mode_4bit}")
+        print(f"8bit = {mode_8bit}, 4bit = {mode_4bit}")    
         model = AutoModelForCausalLM.from_pretrained(
             base,
+            torch_dtype=torch.float16,
             load_in_8bit=mode_8bit,
             load_in_4bit=mode_4bit,
-            torch_dtype=torch.bfloat16,
             device_map="auto",
-            trust_remote_code=True,
             use_safetensors=False,
+            trust_remote_code=True,
             local_files_only=local_files_only
         )
 
-        # if not mode_8bit and not mode_4bit:
-        #     model.half()
+        if not mode_8bit and not mode_4bit:
+            model.half()
 
     # model = BetterTransformer.transform(model)
     return model, tokenizer
