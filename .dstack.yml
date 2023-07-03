@@ -1,7 +1,6 @@
-type: task
-build: 
+type: dev-environment
+
+init: 
  - pip install -r requirements.txt
-ports:
- - 6006
-commands:
- - python app.py
+
+ide: vscode

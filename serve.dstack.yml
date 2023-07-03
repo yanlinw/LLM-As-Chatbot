@@ -1,0 +1,8 @@
+type: task
+
+ports:
+ - 6006
+ 
+commands:
+ - pip install -r requirements.txt
+ - python app.py ${{ run.args }}
