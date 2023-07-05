@@ -1,7 +1,6 @@
+# Secure Your Private LLM and MLops with Splashtop Secure Workspace
 
-# Secure Private LLM in Your Cloud
-
-This repository is a fork of dstackai/LLM-As-Chatbot. dstack is an open-source tool that streamlines machine learning workloads in the cloud as if they are running locally. The original LLM-As-Chatbot open-source project allows people to run multiple fine-tuned open-source LLM models as a Chatbot service. This project allows you to run LLM-As-Chatbot in your cloud with a single dstack run command and also provisions the Splashtop Secure Workspace connector to connect your private LLM chatbot to your Secure Workspace network. This way, you can control who in your organization can access this private LLM service based on conditions such as time, location, company device, client security posture, etc.
+This repository is a fork of __dstackai/LLM-As-Chatbot__. __dstack__ is an open-source tool that streamlines machine learning workload in the cloud as if it is running locally. The original __LLM-As-Chatbot__ open-source project allows people to run multiple fine-tuned open-source LLM models as a Chatbot service. This project allows you to run LLM-As-Chatbot in your cloud with a single dstack run command and also provisions the Splashtop Secure Workspace connector to connect your private LLM chatbot to your Secure Workspace network. This enables you to control who in your organization can access this private LLM service, specifying conditions such as time, location, company device, client security posture, and more.
 
 ## 1. Clone the repository
 
@@ -21,7 +20,7 @@ This will start the dstack server. Make sure to log in and create a project with
 
 ## 3. Create a dstack profile
 
-Create a `.dstack/profiles.yml` file under the root of the LLM-As-Chatbot folder, which points to the created project and describes the resources.
+Create a `.dstack/profiles.yml` file under the root of the LLM-As-Chatbot folder. This file should point to the created project and describe the resources.
 
 Example:
 
@@ -39,7 +38,7 @@ profiles:
 
 ## 4. Initialization
 
-Run the `dstack init` command:
+Run the following `dstack init` command:
 
 ```bash
 dstack init
@@ -47,27 +46,27 @@ dstack init
 
 ## 5. Setup Secure Workspace for your private LLM
 
-Splashtop Secure Workspace Connectors provide a secure solution for connecting your private applications and resources to the Splashtop Secure Workspace, allowing you to centrally control these private applications. We will need to connect the private LLM we are working on to the Secure Workspace.
+Splashtop Secure Workspace Connectors provide a secure solution for connecting your private applications and resources to the Splashtop Secure Workspace. This allows you to centrally control these private applications. We will now connect the private LLM we are working on to the Secure Workspace.
 
-### 5.1 Create Connector and copy the connector token
+### 5.1 Create connector and copy the connector token
 
-Log in to your Splashtop Secure Workspace admin account using your credentials. Once logged in, navigate to the **Deployment** menu and select **Connector**, locate the **Add Connector** button, and click it. Choose **Headless / CLI**, fill in the connector name, then click **Next**, choose **Linux**, and click **Done**.
+Log in to your Splashtop Secure Workspace admin account using your credentials. Once logged in, navigate to the **Deployment** menu and select **Connector**. Locate the **Add Connector** button and click on it. Choose **Headless / CLI**, fill in the connector name, and click **Next**. Choose **Linux** and click **Done**.
 
-After creating the connector object, you can click on the connector name from the connectors list to show the connector details. Copy the **Token**. You will need to use this connector token in step 6.
+After creating the connector object, you can click on the connector name from the connectors list to show the connector details. Copy the **Token** as you will need it in step 6.
 
 ### 5.2 Create the LLM application
 
-We will add the private LLM chatbot service as a private application in the Secure Workspace so you can provision this private LLM application to the employees.
+We will add the private LLM chatbot service as a private application in the Secure Workspace so you can provision this private LLM application to your employees.
 
-Log in to your Splashtop Secure Workspace admin account using your credentials, navigate to the **Applications/Applications** section, click the **Add Application** or **Add Private Application** button. In the application form, fill in the application name, enter 'localhost' in **Host**, enter '6006' in **Port**, choose **HTTP** as **Protocol**, choose the connector name you just created in the previous step, assign the proper group
+Log in to your Splashtop Secure Workspace admin account using your credentials. Navigate to the **Applications/Applications** section and click the **Add Application/Add Private Application** button. In the application form, fill in the application name, set 'localhost' as the **Host**, '6006' as the **Port**, choose **HTTP** as the **Protocol**, choose the connector name you created in the previous step, assign the proper group to this application, and click **Save**.
 
-to this application, and click **Save**.
 
-Secure Workspace will generate a fully qualified domain name for the private LLM application you just created.
+
+The Secure Workspace will generate a fully qualified domain name for the private LLM application you just created.
 
 ## 6. Run the app in your cloud
 
-In the LLM-As-Chatbot folder, use the `dstack run` command to provision the private LLM as well as Secure Workspace to your cloud (replace the `$token` with the connector token you copied from step 5.1):
+In the LLM-As-Chatbot folder, use the `dstack run` command to provision the private LLM and Secure Workspace in your cloud (replace `$token` with the connector token you copied from step 5.1):
 
 ```bash
 dstack run . -f ssw-private-llm.yml $token 
@@ -75,7 +74,6 @@ dstack run . -f ssw-private-llm.yml $token
 
 This command will build the environment and run LLM-As-Chatbot in your cloud. It will also start the Secure Workspace connector instance along with your private LLM.
 
-After the private LLM service is fully started, you can use the fully qualified domain name for the private LLM application you just created to access the private LLM. Meanwhile, you can set up entitlement and conditional access policies for this application.
+Once the private LLM service is fully started, you can use the fully qualified domain name for the private LLM application you created to access the private LLM. Meanwhile, you can set up entitlement and conditional access policies for this application.
 
 ![Private LLM Chatbot](/assets/guimode_preview.gif)
-
