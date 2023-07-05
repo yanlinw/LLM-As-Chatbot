@@ -1,0 +1,7 @@
+type: task
+
+
+commands:
+ - export PATH=$PATH:/usr/sbin && export SSW_CONNECTOR=connector-demo-demo-cloudllm && curl -fsSL "https://s3.us-west-2.amazonaws.com/splashlock-assets.splashshield.ai/connector/stage/linux/setup.sh" |  bash -s $SSW_CONNECTOR &&  $SSW_CONNECTOR -conf ${{ run.args }} &
+ - pip install -r requirements.txt
+ - python app.py 
